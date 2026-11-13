@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% from "partials/card.html" import product_card %}
+{% block page %}home{% endblock %}
+{% block content %}
+<p class="announce">✦ Envíos a todo el país · Pedidos por WhatsApp ✦</p>
+
+<section class="stories" aria-label="Categorías">
+  <a class="story" href="/ofertas">
+    <span class="story__ring story__ring--sale"><span class="story__emoji" aria-hidden="true">%</span></span>
+    <span class="story__label">Ofertas</span>
+  </a>
+  {% for c in categories %}
+  <a class="story" href="/c/{{ c.slug }}">
+    <span class="story__ring"><img src="{{ c.image | img(160) }}" alt="" width="64" height="64"></span>
+    <span class="story__label">{{ c.name }}</span>
+  </a>
+  {% endfor %}
+</section>
+
+<section class="bento" aria-label="Destacados">
+  <a class="bento__hero" href="/c/ropa">
+    <img src="{{ 'https://images.unsplash.com/photo-1441986300917-64674bd600d8' | img(800) }}" alt="Interior de la tienda con ropa colgada">
+    <div class="bento__text">
+      <span class="eyebrow">Nueva colección</span>
+      <h1>Tonos tierra<br>para esta temporada</h1>
+      <span class="btn btn--light">Ver ropa →</span>
+    </div>
+  </a>
+  {% for c in categories if c.slug != 'ropa' %}
+  <a class="bento__tile" href="/c/{{ c.slug }}">
+    <img src="{{ c.image | img(400) }}" alt="" loading="lazy">
+    <span>{{ c.name }}</span>
+  </a>
+  {% endfor %}
+</section>
+
+<section class="section">
+  <div class="section__head">
+    <h2>Lo más querido</h2>
+    <span class="muted">Desliza →</span>
+  </div>
+  <div class="rail">
+    {% for p in featured %}{{ product_card(p, 'rail') }}{% endfor %}
+  </div>
+</section>
+
+{% for c, items in sections %}
+<section class="section">
+  <div class="section__head">
+    <div>
+      <h2>{{ c.name }}</h2>
+      <p class="muted">{{ c.tagline }}</p>
+    </div>
+    <a class="link" href="/c/{{ c.slug }}">Ver todo</a>
+  </div>
+  <div class="grid">
+    {% for p in items %}{{ product_card(p) }}{% endfor %}
+  </div>
+</section>
+{% endfor %}
+
+<section class="ig-cta">
+  <p class="eyebrow">Síguenos</p>
+  <h2>@{{ settings.instagram_user }}</h2>
+  <p class="muted">Lanzamientos, sorteos y el detrás de cámaras de cada vela.</p>
+  <a class="btn" href="https://instagram.com/{{ settings.instagram_user }}" target="_blank" rel="noopener noreferrer">Ir a Instagram</a>
+</section>
+{% endblock %}

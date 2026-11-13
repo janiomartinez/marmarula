@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% from "partials/card.html" import product_card %}
+{% block title %}{{ category.name }} · {{ settings.app_name }}{% endblock %}
+{% block topbar_left %}<a class="icon-btn" href="/" aria-label="Volver"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>{{ category.name }}</h1>
+  <p class="muted">{{ category.tagline }} · {{ products | length }} productos</p>
+</header>
+
+<nav class="chips" aria-label="Categorías">
+  {% for c in categories %}
+  <a class="chip{% if c.slug == category.slug %} is-active{% endif %}" href="/c/{{ c.slug }}">{{ c.name }}</a>
+  {% endfor %}
+</nav>
+
+<form class="sort" method="get" action="/c/{{ category.slug }}">
+  <label for="sort">Ordenar</label>
+  <select id="sort" name="sort" data-autosubmit>
+    <option value="destacados" {% if sort == 'destacados' %}selected{% endif %}>Destacados</option>
+    <option value="precio-asc" {% if sort == 'precio-asc' %}selected{% endif %}>Menor precio</option>
+    <option value="precio-desc" {% if sort == 'precio-desc' %}selected{% endif %}>Mayor precio</option>
+  </select>
+  <noscript><button class="btn btn--small">Aplicar</button></noscript>
+</form>
+
+<div class="grid grid--page">
+  {% for p in products %}{{ product_card(p) }}{% endfor %}
+</div>
+{% endblock %}

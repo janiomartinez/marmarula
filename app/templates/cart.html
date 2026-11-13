@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Carrito · {{ settings.app_name }}{% endblock %}
+{% block page %}cart{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>Tu carrito</h1>
+  <p class="muted" data-cart-summary>Cargando…</p>
+</header>
+
+<div class="cart" data-cart-root>
+  <ul class="cart__list" data-cart-list></ul>
+
+  <div class="empty" data-cart-empty hidden>
+    <p class="empty__icon" aria-hidden="true">🕯️</p>
+    <p>Tu carrito está vacío.</p>
+    <a class="btn" href="/">Descubrir productos</a>
+  </div>
+
+  <p class="alert" data-cart-error role="alert" hidden></p>
+
+  <section class="summary" data-cart-totals hidden>
+    <div class="summary__row"><span>Subtotal</span><strong data-cart-subtotal></strong></div>
+    <p class="muted small">El envío se calcula al confirmar el pedido por WhatsApp.</p>
+    <a class="btn btn--wide btn--whatsapp" data-cart-checkout href="#" target="_blank" rel="noopener noreferrer">
+      Pedir por WhatsApp
+    </a>
+  </section>
+</div>
+
+<template id="cart-line">
+  <li class="line">
+    <img class="line__img" alt="" width="80" height="100">
+    <div class="line__info">
+      <a class="line__name"></a>
+      <span class="line__variant muted"></span>
+      <span class="line__price"></span>
+      <div class="qty qty--small">
+        <button type="button" class="qty__btn" data-line-qty="-1" aria-label="Quitar uno">−</button>
+        <output class="line__qty"></output>
+        <button type="button" class="qty__btn" data-line-qty="1" aria-label="Agregar uno">+</button>
+      </div>
+    </div>
+    <button type="button" class="line__remove" data-line-remove aria-label="Eliminar del carrito">✕</button>
+  </li>
+</template>
+{% endblock %}

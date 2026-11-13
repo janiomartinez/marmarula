@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "partials/card.html" import product_card %}
+{% block title %}Buscar · {{ settings.app_name }}{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>Buscar</h1>
+</header>
+<form class="search" method="get" action="/buscar" role="search">
+  <label class="visually-hidden" for="q">Buscar productos</label>
+  <input id="q" name="q" type="search" value="{{ q }}" maxlength="60" placeholder="Vela, aretes, lino…" autocomplete="off">
+  <button class="btn">Buscar</button>
+</form>
+
+{% if q %}
+  <p class="muted results-count">{{ results | length }} resultado{{ '' if results | length == 1 else 's' }} para “{{ q }}”</p>
+  <div class="grid grid--page">
+    {% for p in results %}{{ product_card(p) }}{% else %}<p class="empty">No encontramos nada. Prueba con otra palabra.</p>{% endfor %}
+  </div>
+{% else %}
+  <nav class="chips chips--wrap" aria-label="Búsquedas sugeridas">
+    {% for term in ['vela', 'aretes', 'anillo', 'bolso', 'regalo', 'crochet'] %}
+    <a class="chip" href="/buscar?q={{ term }}">{{ term }}</a>
+    {% endfor %}
+  </nav>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,9 @@
+# Dependencias de ejecución (versiones fijadas)
+fastapi==0.162.7
+Jinja2==3.1.6
+pydantic==2.14.3
+pydantic-settings==2.16.3
+pydantic_core==2.50.4
+python-dotenv==1.2.4
+starlette==1.10.0
+uvicorn[standard]==0.54.0

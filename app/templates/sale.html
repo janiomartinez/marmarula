@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "partials/card.html" import product_card %}
+{% block title %}Ofertas · {{ settings.app_name }}{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>Ofertas</h1>
+  <p class="muted">Precios especiales por tiempo limitado</p>
+</header>
+<div class="grid grid--page">
+  {% for p in products %}{{ product_card(p) }}{% else %}<p class="empty">No hay ofertas por ahora.</p>{% endfor %}
+</div>
+{% endblock %}

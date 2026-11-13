@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% from "partials/card.html" import product_card %}
+{% block title %}{{ product.name }} · {{ settings.app_name }}{% endblock %}
+{% block page %}product{% endblock %}
+{% block topbar_left %}<a class="icon-btn" href="/c/{{ product.category }}" aria-label="Volver a {{ category.name }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>{% endblock %}
+{% block content %}
+<article class="pdp" data-product="{{ product.id }}" data-name="{{ product.name }}" data-has-variants="{{ 'true' if product.variants else 'false' }}">
+  <div class="pdp__media">
+    <img src="{{ product.image | img(900) }}" alt="{{ product.name }}" width="900" height="1125">
+    {% if product.badge %}<span class="pill">{{ product.badge }}</span>{% endif %}
+  </div>
+
+  <div class="pdp__info">
+    <a class="eyebrow" href="/c/{{ product.category }}">{{ category.name }}</a>
+    <h1>{{ product.name }}</h1>
+    <p class="pdp__price">
+      {{ product.price | money }}
+      {% if product.on_sale %}<s>{{ product.compare_at_price | money }}</s>{% endif %}
+    </p>
+    <p class="pdp__desc">{{ product.description }}</p>
+
+    {% if product.variants %}
+    <fieldset class="variants">
+      <legend>{{ product.variant_label }}</legend>
+      {% for v in product.variants %}
+      <label class="chip chip--option">
+        <input type="radio" name="variant" value="{{ v }}" {% if loop.first %}checked{% endif %}>
+        <span>{{ v }}</span>
+      </label>
+      {% endfor %}
+    </fieldset>
+    {% endif %}
+
+    <div class="qty" aria-label="Cantidad">
+      <button type="button" class="qty__btn" data-qty="-1" aria-label="Quitar uno">−</button>
+      <output data-qty-value>1</output>
+      <button type="button" class="qty__btn" data-qty="1" aria-label="Agregar uno">+</button>
+    </div>
+
+    <ul class="perks">
+      <li>🚚 Envío a todo el país</li>
+      <li>💬 Confirmas tu pedido por WhatsApp</li>
+      <li>🎁 Empaque de regalo sin costo</li>
+    </ul>
+  </div>
+</article>
+
+{% if related %}
+<section class="section">
+  <div class="section__head"><h2>También te puede gustar</h2></div>
+  <div class="rail">
+    {% for p in related %}{{ product_card(p, 'rail') }}{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block sticky %}
+<div class="buybar">
+  <div>
+    <span class="muted">Total</span>
+    <strong data-buy-total data-unit="{{ product.price }}">{{ product.price | money }}</strong>
+  </div>
+  {% if product.stock > 0 %}
+  <button type="button" class="btn btn--wide" data-add-to-cart data-max="{{ product.stock }}">Agregar al carrito</button>
+  {% else %}
+  <button type="button" class="btn btn--wide" disabled>Agotado</button>
+  {% endif %}
+</div>
+{% endblock %}
