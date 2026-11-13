@@ -26,6 +26,7 @@ def build_quote(
     currency: str,
     whatsapp_number: str,
     store_name: str,
+    free_shipping_threshold: int = 0,
 ) -> CartQuote:
     merged: dict[tuple[str, str | None], int] = {}
     for item in cart.items:
@@ -58,20 +59,28 @@ def build_quote(
         )
 
     subtotal = sum(line.line_total for line in lines)
-    message = _whatsapp_message(lines, subtotal, currency, store_name)
+    remaining = max(free_shipping_threshold - subtotal, 0)
+    free_shipping = remaining == 0
+    message = _whatsapp_message(lines, subtotal, currency, store_name, free_shipping)
     return CartQuote(
         lines=lines,
         item_count=sum(line.quantity for line in lines),
         subtotal=subtotal,
         currency=currency,
+        free_shipping=free_shipping,
+        free_shipping_threshold=free_shipping_threshold,
+        free_shipping_remaining=remaining,
         whatsapp_url=f"https://wa.me/{whatsapp_number}?text={quote(message)}",
     )
 
 
-def _whatsapp_message(lines: list[CartLine], subtotal: int, currency: str, store: str) -> str:
+def _whatsapp_message(
+    lines: list[CartLine], subtotal: int, currency: str, store: str, free_shipping: bool
+) -> str:
     rows = [f"¡Hola {store}! 🌸 Quiero hacer este pedido:", ""]
     for line in lines:
         variant = f" ({line.variant})" if line.variant else ""
         rows.append(f"• {line.quantity} x {line.name}{variant} — {format_money(line.line_total)}")
-    rows += ["", f"Total: {format_money(subtotal)} {currency}"]
+    shipping = "GRATIS 🎉" if free_shipping else "por confirmar"
+    rows += ["", f"Subtotal: {format_money(subtotal)} {currency}", f"Envío: {shipping}"]
     return "\n".join(rows)

@@ -74,12 +74,69 @@ function initProductPage() {
     })
   );
 
-  addBtn?.addEventListener("click", () => {
+  const currentVariant = () => {
     const selected = root.querySelector('input[name="variant"]:checked');
-    const variant = root.dataset.hasVariants === "true" ? selected?.value ?? null : null;
-    Cart.add(root.dataset.product, variant, qty);
+    return root.dataset.hasVariants === "true" ? selected?.value ?? null : null;
+  };
+
+  addBtn?.addEventListener("click", () => {
+    Cart.add(root.dataset.product, currentVariant(), qty);
     toast(`✓ ${root.dataset.name} agregado al carrito`);
   });
+
+  // "Comprar ahora": cotiza solo este producto y abre WhatsApp con el pedido listo.
+  const buyNow = document.querySelector("[data-buy-now]");
+  buyNow?.addEventListener("click", async () => {
+    buyNow.disabled = true;
+    try {
+      const quote = await requestQuote([{ id: root.dataset.product, variant: currentVariant(), qty }]);
+      window.location.href = quote.whatsapp_url;
+    } catch (err) {
+      toast(err.message);
+    } finally {
+      buyNow.disabled = false;
+    }
+  });
+}
+
+// ---------- Galería de fotos ----------
+function initGallery() {
+  const gallery = document.querySelector("[data-gallery]");
+  const track = gallery?.querySelector("[data-gallery-track]");
+  if (!track) return;
+  const counter = gallery.querySelector("[data-gallery-count]");
+  const thumbs = [...gallery.querySelectorAll("[data-gallery-go]")];
+  const total = track.children.length;
+
+  const current = () => Math.round(track.scrollLeft / track.clientWidth);
+  const show = (i) => {
+    if (counter) counter.textContent = `${i + 1} / ${total}`;
+    thumbs.forEach((t, n) => t.classList.toggle("is-active", n === i));
+  };
+  track.addEventListener("scroll", () => show(current()), { passive: true });
+  thumbs.forEach((t) =>
+    t.addEventListener("click", () =>
+      track.scrollTo({ left: Number(t.dataset.galleryGo) * track.clientWidth, behavior: "smooth" })
+    )
+  );
+  track.addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const next = Math.max(0, Math.min(total - 1, current() + (e.key === "ArrowRight" ? 1 : -1)));
+    track.scrollTo({ left: next * track.clientWidth, behavior: "smooth" });
+  });
+}
+
+async function requestQuote(items) {
+  const res = await fetch("/api/v1/cart/quote", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      items: items.map((i) => ({ product_id: i.id, variant: i.variant, quantity: i.qty })),
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : "Revisa tu carrito");
+  return data;
 }
 
 // ---------- Carrito ----------
@@ -108,16 +165,7 @@ async function initCartPage() {
 
     let quote;
     try {
-      const res = await fetch("/api/v1/cart/quote", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: items.map((i) => ({ product_id: i.id, variant: i.variant, quantity: i.qty })),
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : "Revisa tu carrito");
-      quote = data;
+      quote = await requestQuote(items);
     } catch (err) {
       errorBox.textContent = `${err.message}. Ajusta las cantidades o vacía el carrito.`;
       errorBox.hidden = false;
@@ -161,6 +209,16 @@ async function initCartPage() {
     summary.textContent = `${quote.item_count} producto${quote.item_count === 1 ? "" : "s"}`;
     root.querySelector("[data-cart-subtotal]").textContent = `${money(quote.subtotal)} ${quote.currency}`;
     root.querySelector("[data-cart-checkout]").href = quote.whatsapp_url;
+    root.querySelector("[data-cart-shipping]").textContent = quote.free_shipping ? "GRATIS" : "Por confirmar";
+    const pct = quote.free_shipping_threshold
+      ? Math.min(100, Math.round((quote.subtotal / quote.free_shipping_threshold) * 100))
+      : 100;
+    root.querySelector("[data-shipbar-fill]").style.width = `${pct}%`;
+    root.querySelector("[data-shipbar-track]").setAttribute("aria-valuenow", String(pct));
+    root.querySelector("[data-shipbar]").classList.toggle("is-done", quote.free_shipping);
+    root.querySelector("[data-shipbar-text]").textContent = quote.free_shipping
+      ? "🎉 ¡Tu pedido tiene envío GRATIS!"
+      : `Te faltan ${money(quote.free_shipping_remaining)} para tener envío GRATIS`;
     totals.hidden = false;
   };
 
@@ -178,6 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateBadges();
   initAutoSubmit();
   initProductPage();
+  initGallery();
   initCartPage();
 });
 window.addEventListener("storage", updateBadges);

@@ -19,8 +19,16 @@
   <p class="alert" data-cart-error role="alert" hidden></p>
 
   <section class="summary" data-cart-totals hidden>
+    <div class="shipbar" data-shipbar>
+      <p class="shipbar__text" data-shipbar-text></p>
+      <div class="shipbar__track" role="progressbar" aria-label="Progreso hacia envío gratis"
+           aria-valuemin="0" aria-valuemax="100" data-shipbar-track>
+        <span class="shipbar__fill" data-shipbar-fill></span>
+      </div>
+    </div>
     <div class="summary__row"><span>Subtotal</span><strong data-cart-subtotal></strong></div>
-    <p class="muted small">El envío se calcula al confirmar el pedido por WhatsApp.</p>
+    <div class="summary__row summary__row--small"><span>Envío</span><span data-cart-shipping></span></div>
+    <p class="muted small">Confirmas dirección y forma de pago por WhatsApp.</p>
     <a class="btn btn--wide btn--whatsapp" data-cart-checkout href="#" target="_blank" rel="noopener noreferrer">
       Pedir por WhatsApp
     </a>

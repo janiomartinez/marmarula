@@ -27,6 +27,7 @@ class Product(BaseModel):
     compare_at_price: int | None = Field(default=None, gt=0)
     description: str
     image: str
+    gallery: tuple[str, ...] = Field(default=(), max_length=8)
     stock: int = Field(ge=0)
     variants: tuple[str, ...] = ()
     variant_label: str = "Opción"
@@ -67,4 +68,7 @@ class CartQuote(BaseModel):
     item_count: int
     subtotal: int
     currency: str
+    free_shipping: bool
+    free_shipping_threshold: int
+    free_shipping_remaining: int
     whatsapp_url: str

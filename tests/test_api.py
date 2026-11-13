@@ -122,3 +122,18 @@ def test_validation_errors_do_not_echo_input(client: TestClient) -> None:
     res = quote(client, [{"product_id": payload, "quantity": 1}])
     assert res.status_code == 422
     assert payload not in res.text
+
+
+def test_quote_free_shipping_progress(client: TestClient) -> None:
+    data = quote(client, [{"product_id": "aretes-luna-dorada", "quantity": 1}]).json()
+    assert data["free_shipping"] is False
+    assert data["free_shipping_threshold"] == 150000
+    assert data["free_shipping_remaining"] == 150000 - 38000
+    assert "Envío: por confirmar" in unquote(data["whatsapp_url"])
+
+
+def test_quote_free_shipping_reached(client: TestClient) -> None:
+    data = quote(client, [{"product_id": "aretes-luna-dorada", "quantity": 4}]).json()
+    assert data["free_shipping"] is True
+    assert data["free_shipping_remaining"] == 0
+    assert "Envío: GRATIS" in unquote(data["whatsapp_url"])

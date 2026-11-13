@@ -30,7 +30,8 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR, context_processors=[_global
 def image_url(url: str, width: int = 600) -> str:
     """Pide a Unsplash la imagen ya recortada y comprimida al ancho necesario."""
     if url.startswith("https://images.unsplash.com/"):
-        return f"{url}?w={width}&q=75&auto=format&fit=crop"
+        sep = "&" if "?" in url else "?"
+        return f"{url}{sep}w={width}&q=75&auto=format&fit=crop"
     return url
 
 

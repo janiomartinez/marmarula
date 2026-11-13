@@ -11,8 +11,19 @@ Inspirado en las tendencias de e-commerce móvil actuales:
 - **Barra de navegación inferior** (como Instagram), fácil de usar con el pulgar.
 - **Categorías tipo historias** de Instagram con anillos de color.
 - **Bento grid** en la portada y **carruseles deslizables** de productos.
-- **Barra fija de “Agregar al carrito”** en el detalle de producto.
+- **Barra fija de “Agregar al carrito” / “Comprar ahora”** en el detalle de producto.
+- **Galería de fotos** deslizable con miniaturas.
+- **Envío gratis desde un monto**, con barra de progreso en el carrito.
+- **Botón flotante de WhatsApp** y barra de anuncios animada.
 - Paleta tierra (crema, terracota, salvia) con tipografías *Fraunces* y *Outfit*.
+
+### Responsive (celular, tablet y PC)
+
+| Pantalla | Diseño |
+|---|---|
+| Celular (< 700 px) | barra inferior, 2 columnas, botones de compra fijos abajo |
+| Tablet (700–1023 px) | 3 columnas, portada bento en dos columnas |
+| PC (≥ 1024 px) | menú superior, 4 columnas, ficha de producto y carrito en dos columnas |
 
 ## Cómo verla en tu computador
 
@@ -62,7 +73,7 @@ tests/               # tests automáticos (pytest)
 Edita `app/data/catalog.json`. Cada producto tiene `id`, `name`, `category`
 (`accesorios`, `velas` o `ropa`), `price`, `stock`, `image` y opcionalmente
 `compare_at_price` (precio antes de la oferta), `variants` (tallas, frascos…),
-`badge` y `featured`. Los tests validan que el archivo sea correcto.
+`gallery` (fotos adicionales), `badge` y `featured`. Los tests validan que el archivo sea correcto.
 
 Las imágenes actuales son **de ejemplo** y vienen de [Unsplash](https://unsplash.com).
 Reemplázalas por las fotos reales de los productos.
@@ -71,7 +82,7 @@ Reemplázalas por las fotos reales de los productos.
 
 | Herramienta | Para qué |
 |---|---|
-| `pytest` + `pytest-cov` | 48 tests, cobertura mínima exigida del 90 % |
+| `pytest` + `pytest-cov` | 53 tests, cobertura mínima exigida del 90 % |
 | `ruff` | lint y formato del código |
 | `bandit` | análisis estático de seguridad |
 | `pip-audit` | vulnerabilidades conocidas en dependencias |
@@ -105,4 +116,5 @@ Medidas de seguridad aplicadas (basadas en OWASP):
 | `MARMARULA_WHATSAPP_NUMBER` | `573000000000` | número que recibe los pedidos (solo dígitos, con código de país) |
 | `MARMARULA_INSTAGRAM_USER` | `marmarula` | usuario de Instagram |
 | `MARMARULA_CURRENCY` | `COP` | moneda mostrada |
+| `MARMARULA_FREE_SHIPPING_THRESHOLD` | `150000` | compra mínima para envío gratis |
 | `MARMARULA_ALLOWED_HOSTS` | `["localhost","127.0.0.1","testserver"]` | dominios permitidos |

@@ -4,10 +4,26 @@
 {% block page %}product{% endblock %}
 {% block topbar_left %}<a class="icon-btn" href="/c/{{ product.category }}" aria-label="Volver a {{ category.name }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>{% endblock %}
 {% block content %}
+{% set photos = [product.image] + product.gallery | list %}
 <article class="pdp" data-product="{{ product.id }}" data-name="{{ product.name }}" data-has-variants="{{ 'true' if product.variants else 'false' }}">
-  <div class="pdp__media">
-    <img src="{{ product.image | img(900) }}" alt="{{ product.name }}" width="900" height="1125">
+  <div class="gallery" data-gallery>
+    <div class="gallery__track" data-gallery-track tabindex="0" aria-label="Fotos de {{ product.name }}">
+      {% for photo in photos %}
+      <img src="{{ photo | img(900) }}" alt="{{ product.name }} — foto {{ loop.index }} de {{ photos | length }}"
+           width="900" height="1125"{% if not loop.first %} loading="lazy"{% endif %}>
+      {% endfor %}
+    </div>
     {% if product.badge %}<span class="pill">{{ product.badge }}</span>{% endif %}
+    {% if photos | length > 1 %}
+    <span class="gallery__count" data-gallery-count aria-hidden="true">1 / {{ photos | length }}</span>
+    <div class="gallery__thumbs">
+      {% for photo in photos %}
+      <button type="button" class="gallery__thumb{% if loop.first %} is-active{% endif %}" data-gallery-go="{{ loop.index0 }}" aria-label="Ver foto {{ loop.index }}">
+        <img src="{{ photo | img(160) }}" alt="" width="80" height="100">
+      </button>
+      {% endfor %}
+    </div>
+    {% endif %}
   </div>
 
   <div class="pdp__info">
@@ -37,10 +53,26 @@
       <button type="button" class="qty__btn" data-qty="1" aria-label="Agregar uno">+</button>
     </div>
 
+    <div class="buybar">
+      <div class="buybar__total">
+        <span class="muted">Total</span>
+        <strong data-buy-total data-unit="{{ product.price }}">{{ product.price | money }}</strong>
+      </div>
+      {% if product.stock > 0 %}
+      <div class="buybar__actions">
+        <button type="button" class="btn btn--outline" data-add-to-cart data-max="{{ product.stock }}">Agregar al carrito</button>
+        <button type="button" class="btn btn--whatsapp" data-buy-now>Comprar ahora</button>
+      </div>
+      {% else %}
+      <button type="button" class="btn btn--wide" disabled>Agotado</button>
+      {% endif %}
+    </div>
+
     <ul class="perks">
-      <li>🚚 Envío a todo el país</li>
+      <li>🚚 Envío GRATIS desde {{ settings.free_shipping_threshold | money }}</li>
       <li>💬 Confirmas tu pedido por WhatsApp</li>
       <li>🎁 Empaque de regalo sin costo</li>
+      <li>✨ Marca colombiana, seleccionado y empacado a mano</li>
     </ul>
   </div>
 </article>
@@ -53,18 +85,4 @@
   </div>
 </section>
 {% endif %}
-{% endblock %}
-
-{% block sticky %}
-<div class="buybar">
-  <div>
-    <span class="muted">Total</span>
-    <strong data-buy-total data-unit="{{ product.price }}">{{ product.price | money }}</strong>
-  </div>
-  {% if product.stock > 0 %}
-  <button type="button" class="btn btn--wide" data-add-to-cart data-max="{{ product.stock }}">Agregar al carrito</button>
-  {% else %}
-  <button type="button" class="btn btn--wide" disabled>Agotado</button>
-  {% endif %}
-</div>
 {% endblock %}

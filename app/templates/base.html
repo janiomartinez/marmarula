@@ -15,25 +15,66 @@
 </head>
 <body data-page="{% block page %}{% endblock %}">
   <header class="topbar">
-    {% block topbar_left %}<span class="topbar__spacer" aria-hidden="true"></span>{% endblock %}
+    <div class="topbar__left">{% block topbar_left %}<span class="topbar__spacer" aria-hidden="true"></span>{% endblock %}</div>
     <a class="brand" href="/" aria-label="Ir al inicio de {{ settings.app_name }}">marmarula</a>
-    <a class="icon-btn" href="/carrito" aria-label="Ver carrito">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
-      <span class="badge" data-cart-count hidden>0</span>
-    </a>
+    <nav class="desknav" aria-label="Secciones">
+      <a href="/"{% if current_path == '/' %} class="is-active" aria-current="page"{% endif %}>Inicio</a>
+      {% for c in categories %}
+      {% set href = '/c/' ~ c.slug %}
+      <a href="{{ href }}"{% if current_path == href %} class="is-active" aria-current="page"{% endif %}>{{ c.name }}</a>
+      {% endfor %}
+      <a href="/ofertas"{% if current_path == '/ofertas' %} class="is-active" aria-current="page"{% endif %}>Ofertas</a>
+    </nav>
+    <div class="topbar__actions">
+      <a class="icon-btn desk-only" href="/buscar" aria-label="Buscar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm9 16-4-4"/></svg>
+      </a>
+      <a class="icon-btn" href="/carrito" aria-label="Ver carrito">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <span class="badge" data-cart-count hidden>0</span>
+      </a>
+    </div>
   </header>
+
+  <div class="announce" aria-label="Novedades">
+    <div class="announce__track">
+      {% for _ in range(2) %}
+      <span{% if loop.index == 2 %} aria-hidden="true"{% endif %}>
+        ✦ Envío GRATIS por compras desde {{ settings.free_shipping_threshold | money }}
+        ✦ Pedidos fáciles por WhatsApp
+        ✦ Marca colombiana, hecha con amor
+        ✦ Empaque de regalo sin costo&nbsp;
+      </span>
+      {% endfor %}
+    </div>
+  </div>
 
   <main id="contenido">
     {% block content %}{% endblock %}
   </main>
 
   <footer class="footer">
-    <p class="footer__brand">marmarula</p>
-    <p>Accesorios · Velas · Ropa</p>
-    <p><a href="https://instagram.com/{{ settings.instagram_user }}" rel="noopener noreferrer" target="_blank">@{{ settings.instagram_user }}</a></p>
+    <div class="footer__col">
+      <p class="footer__brand">marmarula</p>
+      <p>Accesorios · Velas · Ropa</p>
+      <p>Marca colombiana hecha con amor ✨</p>
+    </div>
+    <div class="footer__col">
+      <p class="footer__title">Compra</p>
+      {% for c in categories %}<a href="/c/{{ c.slug }}">{{ c.name }}</a>{% endfor %}
+      <a href="/ofertas">Ofertas</a>
+    </div>
+    <div class="footer__col">
+      <p class="footer__title">Contacto</p>
+      <a href="https://wa.me/{{ settings.whatsapp_number }}" rel="noopener noreferrer" target="_blank">WhatsApp</a>
+      <a href="https://instagram.com/{{ settings.instagram_user }}" rel="noopener noreferrer" target="_blank">@{{ settings.instagram_user }}</a>
+    </div>
   </footer>
 
-  {% block sticky %}{% endblock %}
+  <a class="wa-float" href="https://wa.me/{{ settings.whatsapp_number }}?text={{ ('¡Hola ' ~ settings.app_name ~ '! Tengo una pregunta 🌸') | urlencode }}"
+     target="_blank" rel="noopener noreferrer" aria-label="Escríbenos por WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7L4 20Z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-1.8-1.8l.8-1-1-2L9 9.5Z"/></svg>
+  </a>
 
   <nav class="tabbar" aria-label="Navegación principal">
     {% set tabs = [

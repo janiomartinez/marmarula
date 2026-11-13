@@ -2,8 +2,6 @@
 {% from "partials/card.html" import product_card %}
 {% block page %}home{% endblock %}
 {% block content %}
-<p class="announce">✦ Envíos a todo el país · Pedidos por WhatsApp ✦</p>
-
 <section class="stories" aria-label="Categorías">
   <a class="story" href="/ofertas">
     <span class="story__ring story__ring--sale"><span class="story__emoji" aria-hidden="true">%</span></span>
@@ -37,7 +35,7 @@
 <section class="section">
   <div class="section__head">
     <h2>Lo más querido</h2>
-    <span class="muted">Desliza →</span>
+    <span class="muted rail-hint">Desliza →</span>
   </div>
   <div class="rail">
     {% for p in featured %}{{ product_card(p, 'rail') }}{% endfor %}

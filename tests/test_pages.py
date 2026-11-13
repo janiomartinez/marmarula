@@ -58,3 +58,28 @@ def test_search_page_escapes_query(client: TestClient) -> None:
 
 def test_search_page_finds_products(client: TestClient) -> None:
     assert "Bolso Tote Arena" in client.get("/buscar", params={"q": "bolso"}).text
+
+
+def test_product_page_has_gallery_and_buy_now(client: TestClient) -> None:
+    html = client.get("/p/collar-perla-mar").text
+    assert "data-gallery" in html
+    assert html.count("data-gallery-go") == 3
+    assert "data-buy-now" in html
+    assert "Envío GRATIS desde $ 150.000" in html
+
+
+def test_layout_has_desktop_nav_and_whatsapp_button(client: TestClient) -> None:
+    html = client.get("/c/velas").text
+    assert 'class="desknav"' in html
+    assert 'href="/c/velas" class="is-active"' in html
+    assert 'class="wa-float" href="https://wa.me/' in html
+    assert "Envío GRATIS por compras desde" in html
+
+
+def test_image_filter_handles_existing_query() -> None:
+    from app.routers.pages import image_url
+
+    base = "https://images.unsplash.com/photo-1"
+    assert image_url(base, 100) == f"{base}?w=100&q=75&auto=format&fit=crop"
+    assert image_url(f"{base}?fp-z=2", 100).startswith(f"{base}?fp-z=2&w=100")
+    assert image_url("/static/img/x.png") == "/static/img/x.png"

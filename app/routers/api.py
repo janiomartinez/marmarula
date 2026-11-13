@@ -52,6 +52,7 @@ def quote_cart(cart: CartIn, repo: Repo, settings: Config) -> CartQuote:
             currency=settings.currency,
             whatsapp_number=settings.whatsapp_number,
             store_name=settings.app_name,
+            free_shipping_threshold=settings.free_shipping_threshold,
         )
     except CartError as exc:
         raise HTTPException(status_code=exc.status_code, detail=exc.message) from exc

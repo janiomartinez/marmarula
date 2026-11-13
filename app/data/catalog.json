@@ -27,6 +27,10 @@
       "price": 38000,
       "description": "Aretes en baño de oro de 18k con forma de media luna. Livianos, hipoalergénicos y perfectos para el día a día.",
       "image": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908",
+      "gallery": [
+        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 12,
       "badge": "Nuevo",
       "featured": true
@@ -39,6 +43,10 @@
       "compare_at_price": 68000,
       "description": "Collar delicado con perla natural y cadena fina. Un clásico que combina con todo.",
       "image": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f",
+      "gallery": [
+        "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 6,
       "variants": [
         "40 cm",
@@ -53,6 +61,10 @@
       "price": 32000,
       "description": "Anillo trenzado en acero inoxidable dorado. No se oscurece ni pierde el color.",
       "image": "https://images.unsplash.com/photo-1611591437281-460bfbe1220a",
+      "gallery": [
+        "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 15,
       "variants": [
         "6",
@@ -68,6 +80,10 @@
       "price": 129000,
       "description": "Bolso tote en lona gruesa color arena con asas reforzadas. Cabe todo lo que necesitas en el día.",
       "image": "https://images.unsplash.com/photo-1544816155-12df9643f363",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544816155-12df9643f363?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1544816155-12df9643f363?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 4,
       "badge": "Hecho a mano",
       "featured": true
@@ -80,6 +96,10 @@
       "compare_at_price": 89000,
       "description": "Montura carey con protección UV400. Incluyen estuche de tela.",
       "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f",
+      "gallery": [
+        "https://images.unsplash.com/photo-1572635196237-14b3f281503f?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1572635196237-14b3f281503f?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 9
     },
     {
@@ -89,6 +109,10 @@
       "price": 48000,
       "description": "Set de dos anillos en plata 925 con acabado martillado. Se pueden usar juntos o por separado.",
       "image": "https://images.unsplash.com/photo-1617038220319-276d3cfab638",
+      "gallery": [
+        "https://images.unsplash.com/photo-1617038220319-276d3cfab638?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1617038220319-276d3cfab638?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 0
     },
     {
@@ -98,6 +122,10 @@
       "price": 45000,
       "description": "Vela de cera de soya en frasco de vidrio ámbar. 40 horas de quemado con mecha de algodón.",
       "image": "https://images.unsplash.com/photo-1603006905003-be475563bc59",
+      "gallery": [
+        "https://images.unsplash.com/photo-1603006905003-be475563bc59?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1603006905003-be475563bc59?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 20,
       "variants": [
         "Ámbar",
@@ -114,6 +142,10 @@
       "price": 45000,
       "description": "Lavanda y eucalipto para relajarte al final del día. Cera de soya 100% vegetal.",
       "image": "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6",
+      "gallery": [
+        "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 14,
       "variants": [
         "Ámbar",
@@ -129,6 +161,10 @@
       "compare_at_price": 110000,
       "description": "Set de 3 velas pequeñas: rosa, sándalo y naranja dulce. Ideal para regalar.",
       "image": "https://images.unsplash.com/photo-1572726729207-a78d6feb18d7",
+      "gallery": [
+        "https://images.unsplash.com/photo-1572726729207-a78d6feb18d7?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1572726729207-a78d6feb18d7?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 8,
       "badge": "Regalo",
       "featured": true
@@ -140,6 +176,10 @@
       "price": 52000,
       "description": "Aroma cálido y amaderado. Frasco reutilizable con tapa de madera.",
       "image": "https://images.unsplash.com/photo-1570823635306-250abb06d4b3",
+      "gallery": [
+        "https://images.unsplash.com/photo-1570823635306-250abb06d4b3?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1570823635306-250abb06d4b3?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 10
     },
     {
@@ -149,6 +189,10 @@
       "price": 98000,
       "description": "Abrigo largo de paño con solapa clásica y bolsillos laterales. Elegante y abrigado.",
       "image": "https://images.unsplash.com/photo-1485968579580-b6d095142e6e",
+      "gallery": [
+        "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 7,
       "variants": [
         "S",
@@ -166,6 +210,10 @@
       "price": 42000,
       "description": "Camiseta 100% algodón peinado. El básico que necesitas en todos los colores.",
       "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
+      "gallery": [
+        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 25,
       "variants": [
         "S",
@@ -183,6 +231,10 @@
       "compare_at_price": 189000,
       "description": "Chaqueta bomber liviana en tono terracota con puños en rib. Ideal para tardes frescas.",
       "image": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea",
+      "gallery": [
+        "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 5,
       "variants": [
         "S",
@@ -198,6 +250,10 @@
       "price": 135000,
       "description": "Buzo y jogger en felpa suave color mostaza. Comodidad total con mucho estilo.",
       "image": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f",
+      "gallery": [
+        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 6,
       "variants": [
         "S",
@@ -213,6 +269,10 @@
       "price": 145000,
       "description": "Poncho tejido a mano en crochet con flecos. Perfecto sobre un básico o en la playa.",
       "image": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105",
+      "gallery": [
+        "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?crop=focalpoint&fp-x=0.5&fp-y=0.45&fp-z=1.6",
+        "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?crop=focalpoint&fp-x=0.42&fp-y=0.6&fp-z=2.3"
+      ],
       "stock": 3,
       "variants": [
         "Talla única"
