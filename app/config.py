@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     instagram_user: str = Field(default="marmarula", pattern=r"^[A-Za-z0-9._]{1,30}$")
     currency: str = Field(default="COP", pattern=r"^[A-Z]{3}$")
     free_shipping_threshold: int = Field(default=150000, ge=0)
+    # Versión estática (GitHub Pages): sin servidor, el carrito se calcula en el navegador.
+    static_site: bool = False
+    base_path: str = Field(default="", pattern=r"^(/[A-Za-z0-9._-]+)*$")
 
     @property
     def is_production(self) -> bool:

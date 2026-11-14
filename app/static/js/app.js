@@ -1,10 +1,14 @@
 // Marmarula — JS sin dependencias. Sin innerHTML con datos: todo se pinta con
-// textContent/atributos para evitar XSS. El carrito vive en localStorage y los
-// precios se recalculan SIEMPRE en el servidor (/api/v1/cart/quote).
+// textContent/atributos para evitar XSS. El carrito vive en localStorage.
+// - Con servidor (FastAPI): los precios se recalculan en /api/v1/cart/quote.
+// - Versión estática (GitHub Pages): se calculan aquí con el catálogo publicado
+//   y la tienda confirma el pedido final por WhatsApp.
 "use strict";
 
 const CART_KEY = "marmarula:cart:v1";
 const MAX_QTY = 20;
+const BASE = document.body.dataset.base || "";
+const STATIC = document.body.dataset.static === "true";
 
 const money = (n) => "$ " + n.toLocaleString("es-CO");
 
@@ -127,7 +131,8 @@ function initGallery() {
 }
 
 async function requestQuote(items) {
-  const res = await fetch("/api/v1/cart/quote", {
+  if (STATIC) return localQuote(items);
+  const res = await fetch(`${BASE}/api/v1/cart/quote`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -137,6 +142,122 @@ async function requestQuote(items) {
   const data = await res.json();
   if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : "Revisa tu carrito");
   return data;
+}
+
+// ---------- Versión estática: catálogo y cálculo en el navegador ----------
+let catalogPromise;
+function loadCatalog() {
+  catalogPromise ??= fetch(`${BASE}/api/catalog.json`).then((r) => {
+    if (!r.ok) throw new Error("No se pudo cargar el catálogo");
+    return r.json();
+  });
+  return catalogPromise;
+}
+
+// Misma lógica y mismos mensajes que app/cart.py (build_quote).
+async function localQuote(items) {
+  const { settings, products } = await loadCatalog();
+  const byId = new Map(products.map((p) => [p.id, p]));
+  const merged = new Map();
+  for (const i of items) {
+    const key = JSON.stringify([i.id, i.variant ?? null]);
+    merged.set(key, (merged.get(key) || 0) + Number(i.qty));
+  }
+  const lines = [];
+  for (const [key, quantity] of merged) {
+    const [id, variant] = JSON.parse(key);
+    const p = byId.get(id);
+    if (!p) throw new Error(`El producto '${id}' no existe`);
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QTY) throw new Error("Cantidad no válida");
+    if (p.variants.length && !p.variants.includes(variant)) throw new Error(`Elige una opción válida para '${p.name}'`);
+    if (!p.variants.length && variant !== null) throw new Error(`'${p.name}' no tiene opciones`);
+    if (quantity > p.stock) throw new Error(`Solo quedan ${p.stock} unidades de '${p.name}'`);
+    lines.push({
+      product_id: p.id, name: p.name, image: p.image, variant, quantity,
+      unit_price: p.price, line_total: p.price * quantity,
+    });
+  }
+  const subtotal = lines.reduce((s, l) => s + l.line_total, 0);
+  const remaining = Math.max(settings.free_shipping_threshold - subtotal, 0);
+  const free = remaining === 0;
+  const rows = [`¡Hola ${settings.app_name}! 🌸 Quiero hacer este pedido:`, ""];
+  for (const l of lines) {
+    rows.push(`• ${l.quantity} x ${l.name}${l.variant ? ` (${l.variant})` : ""} — ${money(l.line_total)}`);
+  }
+  rows.push("", `Subtotal: ${money(subtotal)} ${settings.currency}`, `Envío: ${free ? "GRATIS 🎉" : "por confirmar"}`);
+  return {
+    lines,
+    item_count: lines.reduce((s, l) => s + l.quantity, 0),
+    subtotal,
+    currency: settings.currency,
+    free_shipping: free,
+    free_shipping_threshold: settings.free_shipping_threshold,
+    free_shipping_remaining: remaining,
+    whatsapp_url: `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(rows.join("\n"))}`,
+  };
+}
+
+function unsplash(url, width) {
+  if (!url.startsWith("https://images.unsplash.com/")) return url;
+  return `${url}${url.includes("?") ? "&" : "?"}w=${width}&q=75&auto=format&fit=crop`;
+}
+
+// Búsqueda (versión estática): mismos criterios que CatalogRepository.search.
+async function initStaticSearch() {
+  const results = document.querySelector("[data-search-results]");
+  if (!STATIC || !results) return;
+  const q = (new URLSearchParams(location.search).get("q") || "").trim().slice(0, 60);
+  if (!q) return;
+  document.getElementById("q").value = q;
+  document.querySelector("[data-search-suggestions]")?.setAttribute("hidden", "");
+  const terms = q.toLowerCase().split(/\s+/);
+  const { products } = await loadCatalog();
+  const found = products.filter((p) => {
+    const hay = `${p.name} ${p.description} ${p.category} ${p.variants.join(" ")}`.toLowerCase();
+    return terms.every((t) => hay.includes(t));
+  });
+  const count = document.querySelector("[data-search-count]");
+  count.textContent = `${found.length} resultado${found.length === 1 ? "" : "s"} para “${q}”`;
+  count.hidden = false;
+  const tpl = document.getElementById("card-tpl");
+  for (const p of found) {
+    const card = tpl.content.firstElementChild.cloneNode(true);
+    card.href = `${BASE}/p/${encodeURIComponent(p.id)}`;
+    if (p.stock === 0) card.classList.add("is-soldout");
+    const img = card.querySelector("img");
+    img.src = unsplash(p.image, 500);
+    img.alt = p.name;
+    const pill = card.querySelector(".pill");
+    const onSale = p.compare_at_price && p.compare_at_price > p.price;
+    if (p.stock === 0) { pill.textContent = "Agotado"; pill.classList.add("pill--dark"); pill.hidden = false; }
+    else if (onSale) { pill.textContent = `-${Math.round((1 - p.price / p.compare_at_price) * 100)}%`; pill.classList.add("pill--sale"); pill.hidden = false; }
+    else if (p.badge) { pill.textContent = p.badge; pill.hidden = false; }
+    card.querySelector(".card__title").textContent = p.name;
+    card.querySelector(".card__price span").textContent = money(p.price);
+    if (onSale) { const s = card.querySelector("s"); s.textContent = money(p.compare_at_price); s.hidden = false; }
+    results.append(card);
+  }
+  if (!found.length) {
+    const msg = document.createElement("p");
+    msg.className = "empty";
+    msg.textContent = "No encontramos nada. Prueba con otra palabra.";
+    results.append(msg);
+  }
+}
+
+// Orden por precio (versión estática): reordena las tarjetas ya pintadas.
+function initStaticSort() {
+  const grid = document.querySelector("[data-sort-grid]");
+  if (!STATIC || !grid) return;
+  const sort = new URLSearchParams(location.search).get("sort") || "destacados";
+  const select = document.getElementById("sort");
+  if (select && [...select.options].some((o) => o.value === sort)) select.value = sort;
+  const cards = [...grid.children];
+  const price = (c) => Number(c.dataset.price);
+  if (sort === "precio-asc") cards.sort((a, b) => price(a) - price(b));
+  else if (sort === "precio-desc") cards.sort((a, b) => price(b) - price(a));
+  else cards.sort((a, b) => Number(b.dataset.featured) - Number(a.dataset.featured));
+  grid.append(...cards);
 }
 
 // ---------- Carrito ----------
@@ -183,10 +304,10 @@ async function initCartPage() {
     for (const line of quote.lines) {
       const node = tpl.content.firstElementChild.cloneNode(true);
       const img = node.querySelector(".line__img");
-      img.src = `${line.image}?w=200&q=70&auto=format&fit=crop`;
+      img.src = unsplash(line.image, 200);
       const name = node.querySelector(".line__name");
       name.textContent = line.name;
-      name.href = `/p/${encodeURIComponent(line.product_id)}`;
+      name.href = `${BASE}/p/${encodeURIComponent(line.product_id)}`;
       node.querySelector(".line__variant").textContent = line.variant ?? "";
       node.querySelector(".line__price").textContent = money(line.line_total);
       node.querySelector(".line__qty").textContent = String(line.quantity);
@@ -237,6 +358,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initAutoSubmit();
   initProductPage();
   initGallery();
+  initStaticSort();
+  initStaticSearch();
   initCartPage();
 });
 window.addEventListener("storage", updateBadges);

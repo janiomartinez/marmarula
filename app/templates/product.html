@@ -2,7 +2,7 @@
 {% from "partials/card.html" import product_card %}
 {% block title %}{{ product.name }} · {{ settings.app_name }}{% endblock %}
 {% block page %}product{% endblock %}
-{% block topbar_left %}<a class="icon-btn" href="/c/{{ product.category }}" aria-label="Volver a {{ category.name }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>{% endblock %}
+{% block topbar_left %}<a class="icon-btn" href="{{ base }}/c/{{ product.category }}" aria-label="Volver a {{ category.name }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>{% endblock %}
 {% block content %}
 {% set photos = [product.image] + product.gallery | list %}
 <article class="pdp" data-product="{{ product.id }}" data-name="{{ product.name }}" data-has-variants="{{ 'true' if product.variants else 'false' }}">
@@ -27,7 +27,7 @@
   </div>
 
   <div class="pdp__info">
-    <a class="eyebrow" href="/c/{{ product.category }}">{{ category.name }}</a>
+    <a class="eyebrow" href="{{ base }}/c/{{ product.category }}">{{ category.name }}</a>
     <h1>{{ product.name }}</h1>
     <p class="pdp__price">
       {{ product.price | money }}

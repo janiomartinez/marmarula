@@ -25,6 +25,29 @@ Inspirado en las tendencias de e-commerce móvil actuales:
 | Tablet (700–1023 px) | 3 columnas, portada bento en dos columnas |
 | PC (≥ 1024 px) | menú superior, 4 columnas, ficha de producto y carrito en dos columnas |
 
+## Ver la tienda en línea
+
+👉 **https://janiomartinez.github.io/marmarula/**
+
+Se publica sola con GitHub Pages cada vez que se sube un cambio a `main`
+(flujo `.github/workflows/pages.yml`: corre los tests, genera el sitio estático y lo publica).
+
+GitHub Pages solo sirve archivos estáticos, así que `python -m app.build_static` genera
+cada página con las mismas plantillas de FastAPI. En esa versión el carrito, la búsqueda y
+el orden por precio se calculan en el navegador con `api/catalog.json`; la tienda confirma
+el precio final al recibir el pedido por WhatsApp. Para cambiar el número de WhatsApp de la
+versión publicada: **Settings → Secrets and variables → Actions → Variables →
+`WHATSAPP_NUMBER`**.
+
+Para probar la versión estática en tu computador:
+
+```bash
+python -m app.build_static --out .preview/marmarula --base /marmarula
+python -m http.server 8100 --directory .preview
+```
+
+y abre <http://localhost:8100/marmarula/>.
+
 ## Cómo verla en tu computador
 
 Requisitos: Python 3.11 o superior.
@@ -82,7 +105,7 @@ Reemplázalas por las fotos reales de los productos.
 
 | Herramienta | Para qué |
 |---|---|
-| `pytest` + `pytest-cov` | 53 tests, cobertura mínima exigida del 90 % |
+| `pytest` + `pytest-cov` | 59 tests, cobertura mínima exigida del 90 % |
 | `ruff` | lint y formato del código |
 | `bandit` | análisis estático de seguridad |
 | `pip-audit` | vulnerabilidades conocidas en dependencias |

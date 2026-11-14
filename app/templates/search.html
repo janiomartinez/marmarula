@@ -5,7 +5,7 @@
 <header class="page-head">
   <h1>Buscar</h1>
 </header>
-<form class="search" method="get" action="/buscar" role="search">
+<form class="search" method="get" action="{{ base }}/buscar" role="search">
   <label class="visually-hidden" for="q">Buscar productos</label>
   <input id="q" name="q" type="search" value="{{ q }}" maxlength="60" placeholder="Vela, aretes, lino…" autocomplete="off">
   <button class="btn">Buscar</button>
@@ -17,9 +17,20 @@
     {% for p in results %}{{ product_card(p) }}{% else %}<p class="empty">No encontramos nada. Prueba con otra palabra.</p>{% endfor %}
   </div>
 {% else %}
-  <nav class="chips chips--wrap" aria-label="Búsquedas sugeridas">
+  {% if settings.static_site %}
+  {# Versión estática: los resultados se buscan en el navegador (app.js). #}
+  <p class="muted results-count" data-search-count hidden></p>
+  <div class="grid grid--page" data-search-results></div>
+  <template id="card-tpl">
+    <a class="card">
+      <div class="card__media"><img alt="" loading="lazy" width="500" height="625"><span class="pill" hidden></span></div>
+      <div class="card__body"><h3 class="card__title"></h3><p class="card__price"><span></span> <s hidden></s></p></div>
+    </a>
+  </template>
+  {% endif %}
+  <nav class="chips chips--wrap" aria-label="Búsquedas sugeridas" data-search-suggestions>
     {% for term in ['vela', 'aretes', 'anillo', 'bolso', 'regalo', 'crochet'] %}
-    <a class="chip" href="/buscar?q={{ term }}">{{ term }}</a>
+    <a class="chip" href="{{ base }}/buscar?q={{ term }}">{{ term }}</a>
     {% endfor %}
   </nav>
 {% endif %}

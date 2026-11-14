@@ -16,6 +16,8 @@ CSP = "; ".join(
         "frame-ancestors 'none'",
     ]
 )
+# frame-ancestors no se permite dentro de <meta>; se usa en la versión estática.
+CSP_META = "; ".join(d for d in CSP.split("; ") if not d.startswith("frame-ancestors"))
 
 # Swagger/ReDoc cargan sus recursos desde un CDN, así que no les aplicamos la CSP estricta.
 DOCS_PATHS = ("/docs", "/redoc", "/openapi.json")

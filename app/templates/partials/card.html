@@ -1,5 +1,5 @@
 {% macro product_card(p, size='md') %}
-<a class="card card--{{ size }}{% if p.stock == 0 %} is-soldout{% endif %}" href="/p/{{ p.id }}">
+<a class="card card--{{ size }}{% if p.stock == 0 %} is-soldout{% endif %}" href="{{ base }}/p/{{ p.id }}" data-price="{{ p.price }}" data-featured="{{ 1 if p.featured else 0 }}">
   <div class="card__media">
     <img src="{{ p.image | img(500) }}" alt="{{ p.name }}" loading="lazy" width="500" height="625">
     {% if p.stock == 0 %}

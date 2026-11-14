@@ -6,30 +6,35 @@
   <meta name="theme-color" content="#f6efe7">
   <meta name="description" content="{{ settings.app_name }}: accesorios, velas artesanales y ropa con estilo.">
   <title>{% block title %}{{ settings.app_name }}{% endblock %}</title>
-  <link rel="icon" href="{{ url_for('static', path='img/logo.svg') }}" type="image/svg+xml">
+  <link rel="icon" href="{{ base }}/static/img/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Outfit:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">
-  <script src="{{ url_for('static', path='js/app.js') }}" defer></script>
+  <link rel="stylesheet" href="{{ base }}/static/css/styles.css">
+  <script src="{{ base }}/static/js/app.js" defer></script>
+  {% if settings.static_site %}
+  {# Sin servidor no hay cabeceras HTTP: la política de seguridad va en una etiqueta meta. #}
+  <meta http-equiv="Content-Security-Policy" content="{{ csp_meta }}">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  {% endif %}
 </head>
-<body data-page="{% block page %}{% endblock %}">
+<body data-page="{% block page %}{% endblock %}" data-base="{{ base }}"{% if settings.static_site %} data-static="true"{% endif %}>
   <header class="topbar">
     <div class="topbar__left">{% block topbar_left %}<span class="topbar__spacer" aria-hidden="true"></span>{% endblock %}</div>
-    <a class="brand" href="/" aria-label="Ir al inicio de {{ settings.app_name }}">marmarula</a>
+    <a class="brand" href="{{ base }}/" aria-label="Ir al inicio de {{ settings.app_name }}">marmarula</a>
     <nav class="desknav" aria-label="Secciones">
-      <a href="/"{% if current_path == '/' %} class="is-active" aria-current="page"{% endif %}>Inicio</a>
+      <a href="{{ base }}/"{% if current_path == '/' %} class="is-active" aria-current="page"{% endif %}>Inicio</a>
       {% for c in categories %}
       {% set href = '/c/' ~ c.slug %}
-      <a href="{{ href }}"{% if current_path == href %} class="is-active" aria-current="page"{% endif %}>{{ c.name }}</a>
+      <a href="{{ base }}{{ href }}"{% if current_path == href %} class="is-active" aria-current="page"{% endif %}>{{ c.name }}</a>
       {% endfor %}
-      <a href="/ofertas"{% if current_path == '/ofertas' %} class="is-active" aria-current="page"{% endif %}>Ofertas</a>
+      <a href="{{ base }}/ofertas"{% if current_path == '/ofertas' %} class="is-active" aria-current="page"{% endif %}>Ofertas</a>
     </nav>
     <div class="topbar__actions">
-      <a class="icon-btn desk-only" href="/buscar" aria-label="Buscar">
+      <a class="icon-btn desk-only" href="{{ base }}/buscar" aria-label="Buscar">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm9 16-4-4"/></svg>
       </a>
-      <a class="icon-btn" href="/carrito" aria-label="Ver carrito">
+      <a class="icon-btn" href="{{ base }}/carrito" aria-label="Ver carrito">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
         <span class="badge" data-cart-count hidden>0</span>
       </a>
@@ -61,8 +66,8 @@
     </div>
     <div class="footer__col">
       <p class="footer__title">Compra</p>
-      {% for c in categories %}<a href="/c/{{ c.slug }}">{{ c.name }}</a>{% endfor %}
-      <a href="/ofertas">Ofertas</a>
+      {% for c in categories %}<a href="{{ base }}/c/{{ c.slug }}">{{ c.name }}</a>{% endfor %}
+      <a href="{{ base }}/ofertas">Ofertas</a>
     </div>
     <div class="footer__col">
       <p class="footer__title">Contacto</p>
@@ -84,7 +89,7 @@
       ('/carrito', 'Carrito', 'M6 7h12l-1 13H7L6 7Zm3 0a3 3 0 0 1 6 0'),
     ] %}
     {% for href, label, path in tabs %}
-    <a href="{{ href }}" class="tabbar__item{% if current_path == href %} is-active{% endif %}"{% if current_path == href %} aria-current="page"{% endif %}>
+    <a href="{{ base }}{{ href }}" class="tabbar__item{% if current_path == href %} is-active{% endif %}"{% if current_path == href %} aria-current="page"{% endif %}>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="{{ path }}"/></svg>
       <span>{{ label }}</span>
       {% if href == '/carrito' %}<span class="badge badge--tab" data-cart-count hidden>0</span>{% endif %}

@@ -11,16 +11,19 @@ from app.cart import format_money
 from app.config import get_settings
 from app.models import Product
 from app.repository import CatalogRepository, get_repository
+from app.security import CSP_META
 
 TEMPLATES_DIR = Path(__file__).resolve().parent.parent / "templates"
 
 
 def _globals(request: Request) -> dict:
-    settings = get_settings()
+    settings = getattr(request.app.state, "settings", None) or get_settings()
     return {
         "settings": settings,
         "categories": get_repository().categories(),
         "current_path": request.url.path,
+        "base": settings.base_path,
+        "csp_meta": CSP_META,
     }
 
 

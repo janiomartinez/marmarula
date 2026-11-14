@@ -29,6 +29,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         openapi_url="/openapi.json" if docs else None,
     )
 
+    app.state.settings = settings
+
     # El orden importa: el último añadido es el primero en ejecutarse.
     app.add_middleware(GZipMiddleware, minimum_size=1000)
     app.add_middleware(SecurityHeadersMiddleware, hsts=settings.is_production)
