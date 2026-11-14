@@ -59,7 +59,8 @@ def build(out_dir: Path, base_path: str = "") -> list[Path]:
             written.append(target)
 
         not_found = client.get("/pagina-que-no-existe")
-        assert not_found.status_code == 404  # noqa: S101 - verificación del build
+        if not_found.status_code != 404:
+            raise RuntimeError("La página 404 no se generó correctamente")
         (out_dir / "404.html").write_text(not_found.text, encoding="utf-8")
         written.append(out_dir / "404.html")
 
